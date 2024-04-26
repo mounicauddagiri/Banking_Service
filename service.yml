@@ -29,7 +29,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/messageId'
       requestBody:
-        $ref: '#/components/requestBodies/AuthorizationRequest'
+        $ref: '#/components/components.requestBodies/AuthorizationRequest'
       responses:
         201:
           $ref: '#/components/responses/AuthorizationResponse'
@@ -42,7 +42,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/messageId'
       requestBody:
-        $ref: '#/components/requestBodies/LoadRequest'
+        $ref: '#/components/components.requestBodies/LoadRequest'
       responses:
         201:
           $ref: '#/components/responses/LoadResponse'
