@@ -13,13 +13,13 @@ import spark.Request;
 
 public class AuthorizationRequest {
 
-    public static AuthorizationResponse handleAuthorizationRequest(Request req){
+    public static String handleAuthorizationRequest(Request req){
+        System.out.println("Authorization request initiated");
         AuthorizationResponse res = new AuthorizationResponse();
         Gson gson = new Gson();
         JsonObject jsonBody = gson.fromJson(req.body(), JsonObject.class);
         String userId = jsonBody.get("userId").getAsString();
         String message_id = jsonBody.get("messageId").getAsString();
-        System.out.println("User ID from request body: " + userId);
         JsonObject transactionAmount = jsonBody.getAsJsonObject("transactionAmount");
         float transAmount = transactionAmount.get("amount").getAsFloat();
         System.out.println("TransAmount " + transAmount);
@@ -28,6 +28,12 @@ public class AuthorizationRequest {
         try{
             Users user;
             user = Connection.getUserDetailsFromDB(userId);
+            if (user == null){
+                components.schemas.Error errorResponse = new Error();
+                errorResponse.setMessage("User Not Found");
+                errorResponse.setCode("500");
+                return gson.toJson(errorResponse);
+            }
             res.setMessageId(message_id);
             res.setUserId(userId);
             float amount = user.getAmount();
@@ -36,28 +42,30 @@ public class AuthorizationRequest {
             if(debitOrCredit.equals("CREDIT")){
                 balance = String.valueOf(String.format("%.2f", amount + transAmount));
                 res.setResponseCode(ResponseCode.APPROVED);
-
             } else if (debitOrCredit.equals("DEBIT")) {
                 if(amount < transAmount){
                     res.setResponseCode(ResponseCode.DECLINED);
                     System.out.println("Insufficient balance");
+
                 }
                 else{
                     balance = String.valueOf(String.format("%.2f", amount - transAmount));
                     res.setResponseCode(ResponseCode.APPROVED);
                 }
             }
-            else{
-                res = null;
-            }
-            System.out.println("Balance amount " + balance);
             Amount a = new Amount(balance, currency, DebitCredit.valueOf(debitOrCredit));
-            res.setBalance(a);
             user.setAmount(Float.parseFloat(balance));
+            res.setBalance(a);
             //  Updating the balance amount in the database
-            Connection.updateUserDetailsInDB(user);
+            if(res.getResponseCode().equals(ResponseCode.APPROVED)) {
+                if (!Connection.updateUserDetailsInDB(user)) {
+                    Error errorResponse = new Error();
+                    errorResponse.setMessage("SQL Server Error Response");
+                    errorResponse.setCode("500");
+                    return gson.toJson(errorResponse);
+                }
+            }
             System.out.println("Updated balance in AuthReq: " + balance);
-
         }catch (Exception e){
             e.printStackTrace();
             components.schemas.Error errorResponse = new Error();
@@ -65,6 +73,6 @@ public class AuthorizationRequest {
             errorResponse.setCode("500");
             return null;
         }
-        return res;
+        return gson.toJson(res);
     }
 }

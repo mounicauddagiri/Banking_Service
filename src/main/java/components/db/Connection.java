@@ -29,6 +29,7 @@ public class Connection {
                 user.setCurrency(resultSet.getString("currency"));
             } else {
                 // Handle case where no user with the given ID was found
+//                user = null;
                 System.out.println("No user found with ID: " + user_id);
             }
         } catch (SQLException e) {
@@ -38,7 +39,7 @@ public class Connection {
         return user;
     }
 
-    public static void updateUserDetailsInDB(Users user){
+    public static boolean updateUserDetailsInDB(Users user){
         PreparedStatement statement = null;
         try {
             System.out.println("User new balance amount is " + user.getAmount());
@@ -49,18 +50,44 @@ public class Connection {
             statement.setString(2, user.getCurrency());
             statement.setString(3, String.valueOf(user.getId()));
             int rowsAffected = statement.executeUpdate();
+            System.out.println(statement);
             if (rowsAffected > 0) {
                 System.out.println("Database update successful.");
-            } else {
-                System.out.println("No user found with ID: " + user.getId());
+                return true;
             }
         } catch (SQLException e) {
             e.printStackTrace();
             Error errorResponse = new Error();
             errorResponse.setMessage("SQL Server Error Response");
             errorResponse.setCode("500");
+            return false;
         }
+        return false;
     }
 
 
+    public static boolean createUserInDB(Users user) {
+        PreparedStatement statement = null;
+        try {
+            conn = DatabaseManager.getConnection();
+            String query = "INSERT into users set user_id = ?, amount = ?, currency = ?";
+            statement = conn.prepareStatement(query);
+            statement.setString(1, String.valueOf(user.getId()));
+            statement.setString(2, String.valueOf(user.getAmount()));
+            statement.setString(3, user.getCurrency());
+            int rowsAffected = statement.executeUpdate();
+            System.out.println(statement);
+            if (rowsAffected > 0) {
+                System.out.println("Database update successful.");
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Error errorResponse = new Error();
+            errorResponse.setMessage("SQL Server Error Response");
+            errorResponse.setCode("500");
+            return false;
+        }
+        return false;
+    }
 }

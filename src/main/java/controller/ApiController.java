@@ -1,10 +1,11 @@
 package controller;
+import com.google.gson.JsonObject;
 import components.requestBodies.AuthorizationRequest;
 import components.responses.Ping;
 
 import com.google.gson.Gson;
-import components.schemas.AuthorizationResponse;
 import components.schemas.Error;
+import components.requestBodies.LoadRequest;
 import spark.ResponseTransformer;
 
 import static spark.Spark.*;
@@ -31,7 +32,7 @@ public class ApiController {
         // Define routes for authorization and load endpoints
         put("/authorization/:messageId", (req, res) -> {
             AuthorizationRequest request = new AuthorizationRequest();
-            AuthorizationResponse response = request.handleAuthorizationRequest(req);
+            String response = request.handleAuthorizationRequest(req);
             if (response == null){
                 res.status(500);
                 res.type("application/json");
@@ -39,24 +40,32 @@ public class ApiController {
             }
             res.status(201);
             res.type("application/json");
-            return response;
+            Gson gson = new Gson();
+            JsonObject jsonBody = gson.fromJson(response, JsonObject.class);
+            if (jsonBody.has("code")){
+                res.status(500);
+            }
+            return jsonBody;
         }, jsonTransformer);
 
         put("/load/:messageId", (req, res) -> {
-            String messageId = req.params(":messageId");
-            String requestBody = req.body();
-            // Handle load request
-            return handleLoadRequest(messageId, requestBody);
-        });
+
+            LoadRequest request = new LoadRequest();
+            String response = request.handleLoadRequest(req);
+            if (response == null){
+                res.status(500);
+                res.type("application/json");
+                return new Error("Internal Server Error", "500");
+            }
+            res.status(201);
+            res.type("application/json");
+            Gson gson = new Gson();
+            JsonObject jsonBody = gson.fromJson(response, JsonObject.class);
+            if (jsonBody.has("code")){
+                res.status(500);
+            }
+            return jsonBody;
+        }, jsonTransformer);
     }
 
-    private static String handleAuthorizationRequest(String messageId, String requestBody) {
-        // Implement logic to handle authorization request
-        return "Authorization request handled for messageId: " + messageId;
-    }
-
-    private static String handleLoadRequest(String messageId, String requestBody) {
-        // Implement logic to handle load request
-        return "Load request handled for messageId: " + messageId;
-    }
 }
