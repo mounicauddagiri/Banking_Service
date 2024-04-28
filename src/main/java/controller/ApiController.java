@@ -32,7 +32,7 @@ public class ApiController {
         // Define routes for authorization and load endpoints
         put("/authorization/:messageId", (req, res) -> {
             AuthorizationRequest request = new AuthorizationRequest();
-            String response = request.handleAuthorizationRequest(req);
+            String response = request.handleAuthorizationRequest(req.body());
             if (response == null){
                 res.status(500);
                 res.type("application/json");
@@ -51,7 +51,7 @@ public class ApiController {
         put("/load/:messageId", (req, res) -> {
 
             LoadRequest request = new LoadRequest();
-            String response = request.handleLoadRequest(req);
+            String response = request.handleLoadRequest(req.body());
             if (response == null){
                 res.status(500);
                 res.type("application/json");

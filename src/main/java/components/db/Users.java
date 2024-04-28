@@ -1,19 +1,23 @@
 package components.db;
 
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
-@DatabaseTable(tableName = "users")
 public class Users {
-    @DatabaseField(generatedId = true)
-    private int id;
-    @DatabaseField
-    private String currency;
-    @DatabaseField
-    private float amount;
+
+    public int id;
+
+    public String currency;
+
+    public float amount;
 
     public Users(){
 
     }
+
+    public Users(int i, float v, String usd) {
+        this.id = i;
+        this.amount = v;
+        this.currency = usd;
+    }
+
     public int getId(){
         return this.id;
     }
@@ -36,4 +40,5 @@ public class Users {
     public void setCurrency(String currency) {
         this.currency = currency;
     }
+
 }

@@ -2,19 +2,20 @@ package components.db;
 
 import components.schemas.Error;
 
+import javax.xml.crypto.Data;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 
-public class Connection {
+public abstract class Connection {
 
-    private static java.sql.Connection conn;
+    public java.sql.Connection conn;
 
-    public static Users getUserDetailsFromDB(String user_id) {
-        Users user = new Users();
+    public Users getUserDetailsFromDB(String user_id) {
         PreparedStatement statement = null;
         ResultSet resultSet = null;
+        Users user = new Users();
         try {
             System.out.println(user_id);
             conn = DatabaseManager.getConnection();
@@ -28,23 +29,21 @@ public class Connection {
                 user.setAmount(resultSet.getFloat("amount"));
                 user.setCurrency(resultSet.getString("currency"));
             } else {
-                // Handle case where no user with the given ID was found
-//                user = null;
+                user = null;
                 System.out.println("No user found with ID: " + user_id);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return user;
     }
 
-    public static boolean updateUserDetailsInDB(Users user){
+    public boolean updateUserDetailsInDB(Users user){
         PreparedStatement statement = null;
         try {
             System.out.println("User new balance amount is " + user.getAmount());
             conn = DatabaseManager.getConnection();
-            String query = "UPDATE users SET amount = ?, currency = ? where user_id = ?";
+            String query = "UPDATE users SET amount = ?, currency = ?, last_update_datetime = CURRENT_TIMESTAMP where user_id = ?";
             statement = conn.prepareStatement(query);
             statement.setString(1, String.valueOf(user.getAmount()));
             statement.setString(2, user.getCurrency());
@@ -66,7 +65,7 @@ public class Connection {
     }
 
 
-    public static boolean createUserInDB(Users user) {
+    public boolean createUserInDB(Users user) {
         PreparedStatement statement = null;
         try {
             conn = DatabaseManager.getConnection();
@@ -87,6 +86,28 @@ public class Connection {
             errorResponse.setMessage("SQL Server Error Response");
             errorResponse.setCode("500");
             return false;
+        }
+        return false;
+    }
+
+    public boolean updateMessageDB(String user_id, String messageId, String DebitCredit){
+        PreparedStatement statement = null;
+        try{
+            conn = DatabaseManager.getConnection();
+            String query = "INSERT INTO messages SET message_id = ?, user_id = ?, action = ?";
+            statement = conn.prepareStatement(query);
+            statement.setString(1, messageId);
+            statement.setString(2, user_id);
+            statement.setString(3, DebitCredit);
+            int rowsAffected = statement.executeUpdate();
+            System.out.println(statement);
+            if (rowsAffected > 0) {
+                System.out.println("Database update successful.");
+                return true;
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
         }
         return false;
     }

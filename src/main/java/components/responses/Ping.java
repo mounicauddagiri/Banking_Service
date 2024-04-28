@@ -7,7 +7,7 @@ import spark.Response;
 import java.time.LocalDateTime;
 
 public class Ping {
-    public static String getResponse(Request req, Response res) {
+    public String getResponse(Request req, Response res) {
         try{
             components.schemas.Ping result = new components.schemas.Ping();
             result.getServerTime();

@@ -12,11 +12,25 @@ import spark.Request;
 
 public class LoadRequest {
 
-    public String handleLoadRequest(Request req) {
+    public LoadRequest() {
+
+    }
+
+    public LoadRequest(Connection connection) {
+        this.connection = connection;
+    }
+
+    public Connection connection;
+
+    public Users user;
+
+    public String handleLoadRequest(String req) {
+
         System.out.println("Load request initiated");
+        System.out.println(req);
         LoadResponse res = new LoadResponse();
         Gson gson = new Gson();
-        JsonObject jsonBody = gson.fromJson(req.body(), JsonObject.class);
+        JsonObject jsonBody = gson.fromJson(req, JsonObject.class);
         String userId = jsonBody.get("userId").getAsString();
 
         String message_id = jsonBody.get("messageId").getAsString();
@@ -31,16 +45,14 @@ public class LoadRequest {
         System.out.println("TransAmount " + transAmount);
         String currency = transactionAmount.get("currency").getAsString();
         String debitOrCredit = transactionAmount.get("debitOrCredit").getAsString();
-        Users user;
         String balance = null;
         try{
-            user = Connection.getUserDetailsFromDB(userId);
-            System.out.println(user.getId());
+            user = connection.getUserDetailsFromDB(userId);
             if (user.getId() == 0){
                 user.setCurrency(currency);
                 user.setAmount(transAmount);
                 user.setId(Integer.parseInt(userId));
-                if(Connection.createUserInDB(user)){
+                if(connection.createUserInDB(user)){
                     res.setMessageId(message_id);
                     res.setUserId(userId);
                     balance = String.valueOf(String.format("%.2f", transAmount));
@@ -57,13 +69,12 @@ public class LoadRequest {
                 Amount a = new Amount(balance, currency, DebitCredit.valueOf(debitOrCredit));
                 user.setAmount(Float.parseFloat(balance));
                 res.setBalance(a);
-                if (!Connection.updateUserDetailsInDB(user)) {
+                if (!connection.updateUserDetailsInDB(user) || !connection.updateMessageDB(userId, message_id, debitOrCredit)){
                     Error errorResponse = new Error();
                     errorResponse.setMessage("SQL Server Error Response");
                     errorResponse.setCode("500");
                     return gson.toJson(errorResponse);
                 }
-                
             }
             System.out.println("Updated balance in LoadReq: " + balance);
             
