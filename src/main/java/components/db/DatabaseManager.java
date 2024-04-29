@@ -9,9 +9,10 @@ public class DatabaseManager {
     private static final String PASSWORD = "123456";
     private static final String SCHEMA_NAME = "banking_schema";
     private static final String DATABASE_URL = "jdbc:mysql://localhost:3306/banking_schema";
-    private static Connection connection;
+    public Connection connection;
 
-    public static Connection getConnection() {
+
+    public Connection getConnection() {
         if (connection == null) {
             try {
                 connection = DriverManager.getConnection(DATABASE_URL, USERNAME, PASSWORD);
@@ -23,10 +24,10 @@ public class DatabaseManager {
         return connection;
     }
 
-    public static void createSchemaIfNotExists() {
+    public void createSchemaIfNotExists() {
         try {
-            Connection conn = getConnection();
-            Statement statement = conn.createStatement();
+            connection = getConnection();
+            Statement statement = connection.createStatement();
             String createSchemaQuery = "CREATE DATABASE IF NOT EXISTS " + SCHEMA_NAME;
             statement.executeUpdate(createSchemaQuery);
             System.out.println("Schema created or already exists: " + SCHEMA_NAME);
@@ -34,12 +35,11 @@ public class DatabaseManager {
             e.printStackTrace();
         }
     }
-    public static void createTablesIfNotExists() {
+    public void createTablesIfNotExists() {
         // Add your table creation queries here
         try {
-
-            Connection conn = getConnection();
-            Statement statement = conn.createStatement();
+            connection = getConnection();
+            Statement statement = connection.createStatement();
             String createUserTableQuery = "CREATE TABLE IF NOT EXISTS users ("
                     + "user_id INT PRIMARY KEY NOT NULL,"
                     + "amount DECIMAL(10,2),"

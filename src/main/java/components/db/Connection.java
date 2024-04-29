@@ -10,6 +10,12 @@ import java.sql.SQLException;
 
 public abstract class Connection {
 
+    public DatabaseManager db;
+
+    public Connection(DatabaseManager db){
+        this.db = db;
+    }
+
     public java.sql.Connection conn;
 
     public Users getUserDetailsFromDB(String user_id) {
@@ -18,7 +24,7 @@ public abstract class Connection {
         Users user = new Users();
         try {
             System.out.println(user_id);
-            conn = DatabaseManager.getConnection();
+            conn = db.getConnection();
             String query = "SELECT * FROM users WHERE user_id = ?";
             statement = conn.prepareStatement(query);
             statement.setString(1, user_id);
@@ -42,7 +48,7 @@ public abstract class Connection {
         PreparedStatement statement = null;
         try {
             System.out.println("User new balance amount is " + user.getAmount());
-            conn = DatabaseManager.getConnection();
+            conn = db.getConnection();
             String query = "UPDATE users SET amount = ?, currency = ?, last_update_datetime = CURRENT_TIMESTAMP where user_id = ?";
             statement = conn.prepareStatement(query);
             statement.setString(1, String.valueOf(user.getAmount()));
@@ -68,7 +74,7 @@ public abstract class Connection {
     public boolean createUserInDB(Users user) {
         PreparedStatement statement = null;
         try {
-            conn = DatabaseManager.getConnection();
+            conn = db.getConnection();
             String query = "INSERT into users set user_id = ?, amount = ?, currency = ?";
             statement = conn.prepareStatement(query);
             statement.setString(1, String.valueOf(user.getId()));
@@ -93,7 +99,7 @@ public abstract class Connection {
     public boolean updateMessageDB(String user_id, String messageId, String DebitCredit){
         PreparedStatement statement = null;
         try{
-            conn = DatabaseManager.getConnection();
+            conn = db.getConnection();
             String query = "INSERT INTO messages SET message_id = ?, user_id = ?, action = ?";
             statement = conn.prepareStatement(query);
             statement.setString(1, messageId);

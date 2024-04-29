@@ -19,17 +19,17 @@ public class ApiController {
         }
     }
 
-    public static void setupRoutes() {
+    public void setupRoutes() {
 
         JsonTransformer jsonTransformer = new JsonTransformer();
 
         get("/ping", (req, res) -> {
             // Handle ping request
             Ping ping = new Ping();
-            return ping.getResponse(req,res);
-        });
+            return ping.getResponse(res);
+        }, jsonTransformer);
 
-        // Define routes for authorization and load endpoints
+        // Define routes for authorization endpoints
         put("/authorization/:messageId", (req, res) -> {
             AuthorizationRequest request = new AuthorizationRequest();
             String response = request.handleAuthorizationRequest(req.body());
@@ -48,8 +48,8 @@ public class ApiController {
             return jsonBody;
         }, jsonTransformer);
 
+        // Define routes for load endpoints
         put("/load/:messageId", (req, res) -> {
-
             LoadRequest request = new LoadRequest();
             String response = request.handleLoadRequest(req.body());
             if (response == null){

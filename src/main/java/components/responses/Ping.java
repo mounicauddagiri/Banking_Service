@@ -7,14 +7,17 @@ import spark.Response;
 import java.time.LocalDateTime;
 
 public class Ping {
-    public String getResponse(Request req, Response res) {
+
+    Gson gson = new Gson();
+
+    public String getResponse(Response res) {
         try{
             components.schemas.Ping result = new components.schemas.Ping();
             result.getServerTime();
             System.out.println(result.getServerTime());
             res.status(200);
             res.type("application/json");
-            return String.valueOf(result.getServerTime());
+            return gson.toJson(result.getServerTime());
         }
         catch(Exception e){
             res.status(500);
@@ -22,7 +25,7 @@ public class Ping {
             Error errorResponse = new Error();
             errorResponse.setMessage("Server Error Response");
             errorResponse.setCode("500");
-            return String.valueOf(errorResponse.getMessage());
+            return gson.toJson(errorResponse);
         }
     }
 }

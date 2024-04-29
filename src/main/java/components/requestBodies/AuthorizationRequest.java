@@ -4,12 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import components.db.Connection;
 import components.db.Users;
-import components.schemas.Amount;
-import components.schemas.AuthorizationResponse;
-import components.schemas.DebitCredit;
 import components.schemas.Error;
-import components.schemas.ResponseCode;
-import spark.Request;
+import components.schemas.*;
 
 public class AuthorizationRequest {
     public AuthorizationRequest() {
@@ -21,7 +17,9 @@ public class AuthorizationRequest {
     }
     public Connection connection;
 
-    public Users user;
+    public Users user = new Users();
+    public Error errorResponse = new Error();
+
     public String handleAuthorizationRequest(String req){
 
         System.out.println("Authorization request initiated");
@@ -39,7 +37,6 @@ public class AuthorizationRequest {
         try{
             user = connection.getUserDetailsFromDB(userId);
             if (user == null){
-                components.schemas.Error errorResponse = new Error();
                 errorResponse.setMessage("User Not Found");
                 errorResponse.setCode("500");
                 return gson.toJson(errorResponse);
@@ -68,7 +65,6 @@ public class AuthorizationRequest {
             res.setBalance(a);
             //  Updating the balance amount in the database
             if (!connection.updateUserDetailsInDB(user) || !connection.updateMessageDB(userId, message_id, debitOrCredit)){
-                Error errorResponse = new Error();
                 errorResponse.setMessage("SQL Server Error Response");
                 errorResponse.setCode("500");
                 return gson.toJson(errorResponse);
@@ -76,7 +72,6 @@ public class AuthorizationRequest {
             System.out.println("Updated balance in AuthReq: " + balance);
         }catch (Exception e){
             e.printStackTrace();
-            components.schemas.Error errorResponse = new Error();
             errorResponse.setMessage("Server Error Response");
             errorResponse.setCode("500");
             return null;

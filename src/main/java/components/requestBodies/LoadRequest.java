@@ -8,28 +8,26 @@ import components.schemas.Amount;
 import components.schemas.DebitCredit;
 import components.schemas.Error;
 import components.schemas.LoadResponse;
-import spark.Request;
 
 public class LoadRequest {
 
     public LoadRequest() {
 
     }
-
     public LoadRequest(Connection connection) {
         this.connection = connection;
     }
-
     public Connection connection;
+    public Users user = new Users();
 
-    public Users user;
+    public  Error errorResponse = new Error();
 
+    Gson gson = new Gson();
     public String handleLoadRequest(String req) {
 
         System.out.println("Load request initiated");
         System.out.println(req);
         LoadResponse res = new LoadResponse();
-        Gson gson = new Gson();
         JsonObject jsonBody = gson.fromJson(req, JsonObject.class);
         String userId = jsonBody.get("userId").getAsString();
 
@@ -37,7 +35,6 @@ public class LoadRequest {
         JsonObject transactionAmount = jsonBody.getAsJsonObject("transactionAmount");
         float transAmount = transactionAmount.get("amount").getAsFloat();
         if (!(transAmount > 0)) {
-            components.schemas.Error errorResponse = new Error();
             errorResponse.setMessage("Amount must be non-negative");
             errorResponse.setCode("500");
             return gson.toJson(errorResponse);
@@ -70,7 +67,6 @@ public class LoadRequest {
                 user.setAmount(Float.parseFloat(balance));
                 res.setBalance(a);
                 if (!connection.updateUserDetailsInDB(user) || !connection.updateMessageDB(userId, message_id, debitOrCredit)){
-                    Error errorResponse = new Error();
                     errorResponse.setMessage("SQL Server Error Response");
                     errorResponse.setCode("500");
                     return gson.toJson(errorResponse);
@@ -80,7 +76,6 @@ public class LoadRequest {
             
         }catch (Exception e){
             e.printStackTrace();
-            components.schemas.Error errorResponse = new Error();
             errorResponse.setMessage("Server Error Response");
             errorResponse.setCode("500");
             return null;
