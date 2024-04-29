@@ -36,7 +36,6 @@ public class DatabaseManager {
         }
     }
     public void createTablesIfNotExists() {
-        // Add your table creation queries here
         try {
             connection = getConnection();
             Statement statement = connection.createStatement();
@@ -51,7 +50,7 @@ public class DatabaseManager {
                     + "user_id INT,"
                     + "action VARCHAR(45),"
                     + "FOREIGN KEY (user_id) REFERENCES users(id))";
-            statement.executeUpdate(createUserTableQuery);
+            statement.executeUpdate(createMessageTableQuery);
             System.out.println("Messages table created or already exist");
         } catch (SQLException e) {
             e.printStackTrace();

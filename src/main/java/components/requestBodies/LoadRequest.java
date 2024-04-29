@@ -17,7 +17,7 @@ public class LoadRequest {
     public LoadRequest(Connection connection) {
         this.connection = connection;
     }
-    public Connection connection;
+    public Connection connection = new Connection();
     public Users user = new Users();
 
     public  Error errorResponse = new Error();

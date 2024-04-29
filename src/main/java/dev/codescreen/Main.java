@@ -1,4 +1,5 @@
 package dev.codescreen;
+import components.db.Connection;
 import components.db.DatabaseManager;
 import controller.ApiController;
 
@@ -8,6 +9,7 @@ public class Main {
 
         System.out.println("Hello");
         DatabaseManager dbManager = new DatabaseManager();
+        dbManager.getConnection();
         dbManager.createSchemaIfNotExists();
         dbManager.createTablesIfNotExists();
 

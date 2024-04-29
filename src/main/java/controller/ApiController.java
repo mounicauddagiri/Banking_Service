@@ -19,6 +19,9 @@ public class ApiController {
         }
     }
 
+    AuthorizationRequest authorizationRequest = new AuthorizationRequest();
+    LoadRequest loadRequest = new LoadRequest();
+
     public void setupRoutes() {
 
         JsonTransformer jsonTransformer = new JsonTransformer();
@@ -31,8 +34,8 @@ public class ApiController {
 
         // Define routes for authorization endpoints
         put("/authorization/:messageId", (req, res) -> {
-            AuthorizationRequest request = new AuthorizationRequest();
-            String response = request.handleAuthorizationRequest(req.body());
+//            AuthorizationRequest authorizationRequest = new AuthorizationRequest();
+            String response = authorizationRequest.handleAuthorizationRequest(req.body());
             if (response == null){
                 res.status(500);
                 res.type("application/json");
@@ -50,8 +53,8 @@ public class ApiController {
 
         // Define routes for load endpoints
         put("/load/:messageId", (req, res) -> {
-            LoadRequest request = new LoadRequest();
-            String response = request.handleLoadRequest(req.body());
+//            LoadRequest loadRequest = new LoadRequest();
+            String response = loadRequest.handleLoadRequest(req.body());
             if (response == null){
                 res.status(500);
                 res.type("application/json");

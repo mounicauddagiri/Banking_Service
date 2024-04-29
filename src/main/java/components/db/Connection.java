@@ -8,9 +8,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 
-public abstract class Connection {
+public class Connection {
 
     public DatabaseManager db;
+
+    public Connection () {
+        if (this.db == null) {
+            this.db = new DatabaseManager(); // Lazy initialization
+        }
+    }
 
     public Connection(DatabaseManager db){
         this.db = db;
