@@ -7,8 +7,8 @@ import java.sql.Statement;
 public class DatabaseManager {
     private static final String USERNAME = "root";
     private static final String PASSWORD = "123456";
-    private static final String SCHEMA_NAME = "banking_schema";
-    private static final String DATABASE_URL = "jdbc:mysql://localhost:3306/banking_schema";
+    private static final String SCHEMA_NAME = "banking_schema01";
+    private static final String DATABASE_URL = "jdbc:mysql://localhost:3306/banking_schema01";
     public Connection connection;
 
 
@@ -24,9 +24,8 @@ public class DatabaseManager {
         return connection;
     }
 
-    public void createSchemaIfNotExists() {
+    public void createSchemaIfNotExists(Connection connection) {
         try {
-            connection = getConnection();
             Statement statement = connection.createStatement();
             String createSchemaQuery = "CREATE DATABASE IF NOT EXISTS " + SCHEMA_NAME;
             statement.executeUpdate(createSchemaQuery);
@@ -35,21 +34,20 @@ public class DatabaseManager {
             e.printStackTrace();
         }
     }
-    public void createTablesIfNotExists() {
+    public void createTablesIfNotExists(Connection connection) {
         try {
-            connection = getConnection();
             Statement statement = connection.createStatement();
-            String createUserTableQuery = "CREATE TABLE IF NOT EXISTS users ("
+            String createUserTableQuery = "CREATE TABLE IF NOT EXISTS "+ SCHEMA_NAME +".users ("
                     + "user_id INT PRIMARY KEY NOT NULL,"
                     + "amount DECIMAL(10,2),"
                     + "currency VARCHAR(45))";
             statement.executeUpdate(createUserTableQuery);
             System.out.println("Users table created or already exist");
-            String createMessageTableQuery = "CREATE TABLE IF NOT EXISTS messages ("
+            String createMessageTableQuery = "CREATE TABLE IF NOT EXISTS " + SCHEMA_NAME +".messages ("
                     + "message_id VARCHAR(50) NOT NULL,"
                     + "user_id INT,"
                     + "action VARCHAR(45),"
-                    + "FOREIGN KEY (user_id) REFERENCES users(id))";
+                    + "FOREIGN KEY (user_id) REFERENCES "+ SCHEMA_NAME +".users(user_id))";
             statement.executeUpdate(createMessageTableQuery);
             System.out.println("Messages table created or already exist");
         } catch (SQLException e) {

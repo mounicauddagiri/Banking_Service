@@ -34,7 +34,6 @@ public class ApiController {
 
         // Define routes for authorization endpoints
         put("/authorization/:messageId", (req, res) -> {
-//            AuthorizationRequest authorizationRequest = new AuthorizationRequest();
             String response = authorizationRequest.handleAuthorizationRequest(req.body());
             if (response == null){
                 res.status(500);
@@ -53,7 +52,6 @@ public class ApiController {
 
         // Define routes for load endpoints
         put("/load/:messageId", (req, res) -> {
-//            LoadRequest loadRequest = new LoadRequest();
             String response = loadRequest.handleLoadRequest(req.body());
             if (response == null){
                 res.status(500);

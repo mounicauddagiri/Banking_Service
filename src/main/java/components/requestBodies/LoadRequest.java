@@ -45,7 +45,8 @@ public class LoadRequest {
         String balance = null;
         try{
             user = connection.getUserDetailsFromDB(userId);
-            if (user.getId() == 0){
+            if (user == null){
+                user = new Users();
                 user.setCurrency(currency);
                 user.setAmount(transAmount);
                 user.setId(Integer.parseInt(userId));
@@ -56,6 +57,11 @@ public class LoadRequest {
                     Amount a = new Amount(balance, currency, DebitCredit.valueOf(debitOrCredit));
                     user.setAmount(Float.parseFloat(balance));
                     res.setBalance(a);
+                    if(!connection.updateMessageDB(userId, message_id, debitOrCredit)){
+                        errorResponse.setMessage("SQL Server Error Response");
+                        errorResponse.setCode("500");
+                        return gson.toJson(errorResponse);
+                    }
                 }
             }
             else {

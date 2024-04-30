@@ -2,7 +2,6 @@ package components.db;
 
 import components.schemas.Error;
 
-import javax.xml.crypto.Data;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -55,7 +54,7 @@ public class Connection {
         try {
             System.out.println("User new balance amount is " + user.getAmount());
             conn = db.getConnection();
-            String query = "UPDATE users SET amount = ?, currency = ?, last_update_datetime = CURRENT_TIMESTAMP where user_id = ?";
+            String query = "UPDATE users SET amount = ?, currency = ? where user_id = ?";
             statement = conn.prepareStatement(query);
             statement.setString(1, String.valueOf(user.getAmount()));
             statement.setString(2, user.getCurrency());
@@ -75,7 +74,6 @@ public class Connection {
         }
         return false;
     }
-
 
     public boolean createUserInDB(Users user) {
         PreparedStatement statement = null;

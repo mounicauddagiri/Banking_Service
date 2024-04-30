@@ -1,7 +1,9 @@
 package dev.codescreen;
-import components.db.Connection;
 import components.db.DatabaseManager;
 import controller.ApiController;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
 
 public class Main {
 
@@ -9,9 +11,9 @@ public class Main {
 
         System.out.println("Hello");
         DatabaseManager dbManager = new DatabaseManager();
-        dbManager.getConnection();
-        dbManager.createSchemaIfNotExists();
-        dbManager.createTablesIfNotExists();
+        Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/", "root", "123456");
+        dbManager.createSchemaIfNotExists(conn);
+        dbManager.createTablesIfNotExists(conn);
 
         ApiController controller = new ApiController();
         controller.setupRoutes();

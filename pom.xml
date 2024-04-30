@@ -134,6 +134,15 @@
                 </executions>
             </plugin>
         </plugins>
+        <resources>
+            <resource>
+                <directory>src/test/resources/Dumps01</directory>
+                <includes>
+                    <include>banking_schema_01_messages.sql</include>
+                    <include>banking_schema_01_users.sql</include>
+                </includes>
+            </resource>
+        </resources>
     </build>
 
 </project>
