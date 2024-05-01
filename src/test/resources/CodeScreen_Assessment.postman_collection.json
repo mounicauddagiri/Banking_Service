@@ -1,0 +1,193 @@
+{
+	"info": {
+		"_postman_id": "3e0ea93e-8dd7-4f2f-929d-5591c7b33030",
+		"name": "CodeScreen_Assessment",
+		"description": "API integration tests for Ping, Load and Authorization requests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34586381"
+	},
+	"item": [
+		{
+			"name": "AuthorizationRequests",
+			"item": [
+				{
+					"name": "APPROVED",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n              \"messageId\": \"5541wewqq-e480-awwd-bd1b-e991ac67SAAC\",\r\n              \"userId\": \"2\",\r\n              \"transactionAmount\": {\r\n                \"amount\": \"20.00\",\r\n                \"currency\": \"USD\",\r\n                \"debitOrCredit\": \"DEBIT\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4567/authorization/5541wewqq-e480-awwd-bd1b-e991ac67SAAC",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4567",
+							"path": [
+								"authorization",
+								"5541wewqq-e480-awwd-bd1b-e991ac67SAAC"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DECLINED",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n              \"messageId\": \"52241we2q62-e480-awwd-bd1b-e991ac67SAAC\",\r\n              \"userId\": \"2\",\r\n              \"transactionAmount\": {\r\n                \"amount\": \"2000.00\",\r\n                \"currency\": \"USD\",\r\n                \"debitOrCredit\": \"DEBIT\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4567/authorization/52241we2q62-e480-awwd-bd1b-e991ac67SAAC",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4567",
+							"path": [
+								"authorization",
+								"52241we2q62-e480-awwd-bd1b-e991ac67SAAC"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Error",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n              \"messageId\": \"5541wew62-e480-awwd-bd1b-e991ac67SAAC\",\r\n              \"userId\": \"120\",\r\n              \"transactionAmount\": {\r\n                \"amount\": \"20.00\",\r\n                \"currency\": \"USD\",\r\n                \"debitOrCredit\": \"DEBIT\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4567/authorization/5541wew62-e480-awwd-bd1b-e991ac67SAAC",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4567",
+							"path": [
+								"authorization",
+								"5541wew62-e480-awwd-bd1b-e991ac67SAAC"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Authorizations: Conditionally remove money from a user (debit)"
+		},
+		{
+			"name": "LoadRequests",
+			"item": [
+				{
+					"name": "LoadRequest",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"messageId\": \"55210c60-e410-asdf-bc1b-e991ac67FSAC\",\r\n    \"userId\": \"2\",\r\n    \"transactionAmount\": {\r\n        \"amount\": \"100.00\",\r\n        \"currency\": \"USD\",\r\n        \"debitOrCredit\": \"CREDIT\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4567/load/55210c60-e410-asdf-bc1b-e991ac67FSAC",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4567",
+							"path": [
+								"load",
+								"55210c60-e410-asdf-bc1b-e991ac67FSAC"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Error",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"messageId\": \"55210c60-e410-asdf-bc1b-e991ac67FSAC\",\r\n    \"userId\": \"2\",\r\n    \"transactionAmount\": {\r\n        \"amount\": \"-100.00\",\r\n        \"currency\": \"USD\",\r\n        \"debitOrCredit\": \"CREDIT\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4567/load/55210c60-e410-asdf-bc1b-e991ac67FSAC",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4567",
+							"path": [
+								"load",
+								"55210c60-e410-asdf-bc1b-e991ac67FSAC"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Loads: Add money to a user (credit)"
+		},
+		{
+			"name": "PingRequest",
+			"item": [
+				{
+					"name": "Ping",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4567/ping",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4567",
+							"path": [
+								"ping"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Tests the availability of the service and returns the current server time."
+		}
+	]
+}

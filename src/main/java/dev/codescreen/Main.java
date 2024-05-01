@@ -11,7 +11,7 @@ public class Main {
 
         System.out.println("Hello");
         DatabaseManager dbManager = new DatabaseManager();
-        Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/", "root", "123456");
+        Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/", "root", "123456");
         dbManager.createSchemaIfNotExists(conn);
         dbManager.createTablesIfNotExists(conn);
 
