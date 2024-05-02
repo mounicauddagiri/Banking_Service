@@ -1,10 +1,7 @@
 package components.responses;
 import com.google.gson.Gson;
 import components.schemas.Error;
-import spark.Request;
 import spark.Response;
-
-import java.time.LocalDateTime;
 
 public class Ping {
 

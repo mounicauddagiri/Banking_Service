@@ -13,8 +13,4 @@ public class Ping {
 
         return serverTime.format(formatter);
     }
-    public void setServerTime(LocalDateTime serverTime) {
-
-        this.serverTime = serverTime;
-    }
 }
