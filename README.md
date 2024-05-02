@@ -53,29 +53,29 @@ This service accepts the following requests:
    ```sh
    git clone https://github.com/codescreen/CodeScreen_xpz8pzqh.git
    
-2. Navigate to the project directory in terminal:
+2. **Navigate to the project directory in terminal:**
     ```sh
    cd codescreen/CodeScreen_xpz8pzqh
 
-3. Clean the project:
+3. **Clean the project:**
     ```sh
    mvn clean
 
-4. Compile the project:
+4. **Compile the project:**
     ```sh
    mvn compile
    
-5. Package the project:
+5. **Package the project:**
     ```sh
    mvn package
 
-6. Run the application: (If you are using any IDE, you can simply run the Main.class file and test it locally.)
+6. **Run the application:** (If you are using any IDE, you can simply run the Main.class file and test it locally.)
     ```sh
    java -jar target/CodeScreen_xpz8pzqh-1.0.0-jar-with-dependencies.jar
 
-7. Once the server is started, http://localhost:4567/ping
+Once the server is started, http://localhost:4567/ping
 
-   (The above url returns local server time)
+(The above url returns local server time)
 
 ## Design considerations
 
@@ -90,10 +90,10 @@ This service accepts the following requests:
 
 To deploy this application, we can manually upload the jar file to the cloud servers or we can use docker to create an image and build it.
 
-1. Build an image
+1. **Build an image**
    ```sh
    docker build -t my-image .
-2. Run the build image file
+2. **Run the build image file**
    ```sh
    docker run -p 4567:4567 my-image
 
